@@ -17,22 +17,26 @@ class EventSourcer():
 
     def undo(self):
         if len(self.list) <= 1:
-            return
+            return False
         remove = self.list.pop()
         self.undone.append(remove)
         self.value -= remove
+        return True
     
     def redo(self):
         if len(self.undone) < 1:
-            return
+            return False
         remove = self.undone.pop()
         self.list.append(remove)
         self.value += remove
+        return True
 
     def bulk_undo(self, steps: int):
         for i in range(steps):
-            self.undo()
+            if not self.undo():
+                return
 
     def bulk_redo(self, steps: int):
         for i in range(steps):
-            self.redo()
+            if not self.redo():
+                return
